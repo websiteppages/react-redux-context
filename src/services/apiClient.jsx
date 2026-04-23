@@ -7,6 +7,8 @@ const apiClient = axios.create({
   },
 });
 
+
+//API request போகும் முன் token automaticஆ add பண்ணும் system தான் interceptor
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -16,3 +18,7 @@ apiClient.interceptors.request.use((config) => {
 });
 
 export default apiClient;
+
+//Why use this?
+  //👉 இல்லனா:
+  //❌ every API call-ல manual token add பண்ணணும்

@@ -51,6 +51,65 @@
         let a = 30; // ❌ redeclare not allowed
 
     -------------------------------------------------------------------------
+    Arrow Function Component - const App = () => {
+    ------------------------
+        modern React style (recommended 👍)
+        Modern (ES6) - this binding issue இல்லை
+
+    Function Declaration Component - function App() {
+    ------------------------------
+        old style but still works
+
+        const App = () => மற்றும் function App() இரண்டும் React component எழுதும் valid ways. ஆனால் modern React-ல் arrow function (const App) அதிகமாக use பண்ணப்படுகிறது.
+    -------------------------------------------------------------------------
+    async and await and Promise
+    ---------------------------
+        API calls, database calls போன்ற time எடுக்கும் operations-ஐ application freeze ஆகாமல் handle பண்ண async/await use பண்ணப்படுகிறது
+
+            async = ஒரு function-ஐ Promise return பண்ணும் 
+                API calls, database calls போன்ற time எடுக்கும் வேலைகளை handle பண்ண
+
+                Problem - 👉 இவை எல்லாம் synchronousஆ run ஆனா:
+                    ❌ app freeze ஆகும்
+                    ❌ UI block ஆகும்
+
+            await = அந்த work முடியும் வரை காத்திருக்கும்
+
+                👉 Swiggy order:
+                    order place → async
+                    food arrive ஆகும் வரை wait → await
+                    food வந்ததும் → continue
+
+        Promise = future-ல result வரும் என்று promise பண்ணும் object
+                  JavaScript-ல் asynchronous operation முடிந்ததும் success, pending or error result தரும் object
+    -------------------------------------------------------------------------
+    Synchronous vs Asynchronous
+    ---------------------------
+        Synchronous (Sync)
+        -------------------
+            ஒன்று முடிந்த பிறகு தான் அடுத்தது நடக்கும் (line-by-line execution)
+                console.log("1");
+                console.log("2");
+                console.log("3");
+                output - 1, 2, 3
+                ஒன்று முடியும் வரை அடுத்தது wait பண்ணும்
+
+        Asynchronous (Async)
+        ---------------------
+            ஒன்று நடக்கும்போது மற்றவை நிற்காமல் continue ஆகும்    
+                console.log("1");
+
+                setTimeout(() => {
+                    console.log("2");
+                }, 2000);
+
+                console.log("3");
+
+                output - 1, 3, 2
+                
+            Synchronous = one task complete ஆன பிறகு next task run ஆகும்
+            Asynchronous = time எடுக்கும் task நடக்கும்போது மற்ற tasks continue ஆகும்
+    -------------------------------------------------------------------------
 
 
  **/
