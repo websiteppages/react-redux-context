@@ -1,4 +1,16 @@
 import apiClient from "../services/apiClient";
 
+// GET
 export const getPosts = () => apiClient.get("/posts");
-export const createPost = (data) => apiClient.post("/posts", data);
+
+// POST
+export const createPostAPI = (data) =>
+  apiClient.post("/posts", data);
+
+// PUT
+export const updatePostAPI = (id, data) =>
+  apiClient.put(`/posts/${id}`, data);
+
+// DELETE
+export const deletePostAPI = (id) =>
+  apiClient.delete(`/posts/${id}`);

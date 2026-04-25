@@ -1,53 +1,102 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUsers } from "../features/users/userSlice";
-import { fetchPosts } from "../features/posts/postSlice";
+import {
+  fetchPosts,
+  createPost,
+  updatePost,
+  deletePost,
+} from "../features/posts/postSlice";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
+  const { data: posts, status, error } = useSelector(
+    (state) => state.posts
+  );
 
-  const {
-    data: users,
-    status: usersStatus,
-    error: usersError,
-  } = useSelector((state) => state.users);
+  const [title, setTitle] = useState("");
+  const [editingId, setEditingId] = useState(null);
 
-  const {
-    data: posts,
-    status: postsStatus,
-    error: postsError,
-  } = useSelector((state) => state.posts);
-
+  // 🔹 Load posts
   useEffect(() => {
-    dispatch(fetchUsers());
     dispatch(fetchPosts());
   }, [dispatch]);
 
+  // 🔹 Submit (Create / Update)
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!title.trim()) return;
+
+    if (editingId) {
+      dispatch(updatePost({ id: editingId, updatedData: { title } }));
+      setEditingId(null);
+    } else {
+      dispatch(createPost({ title }));
+    }
+
+    setTitle("");
+  };
+
+  // 🔹 Edit
+  const handleEdit = (post) => {
+    setTitle(post.title);
+    setEditingId(post.id);
+  };
+
+  // 🔹 Delete
+  const handleDelete = (id) => {
+    dispatch(deletePost(id));
+  };
+
   return (
-    <div>
-      {/* Users Section */}
-      <div>
-        <h2>Users</h2>
+    <div className="p-6 max-w-2xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Post Dashboard</h1>
 
-        {usersStatus === "loading" && <p>Loading users...</p>}
-        {usersStatus === "failed" && <p>Error: {usersError}</p>}
+      {/* 🔥 Form */}
+      <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Enter post title"
+          className="border p-2 flex-1 rounded"
+        />
+        <button className="bg-blue-500 text-white px-4 rounded">
+          {editingId ? "Update" : "Add"}
+        </button>
+      </form>
 
-        {usersStatus === "success" &&
-          users.map((u) => <p key={u.id}>{u.name}</p>)}
-      </div>
+      {/* 🔥 Status */}
+      {status === "loading" && <p>Loading...</p>}
+      {status === "failed" && <p className="text-red-500">{error}</p>}
 
-      {/* Posts Section */}
-      <div>
-        <h2>Posts</h2>
+      {/* 🔥 List */}
+      <ul className="space-y-2">
+        {posts.map((post) => (
+          <li
+            key={post.id}
+            className="flex justify-between items-center border p-2 rounded"
+          >
+            <span>{post.title}</span>
 
-        {postsStatus === "loading" && <p>Loading posts...</p>}
-        {postsStatus === "failed" && <p>Error: {postsError}</p>}
+            <div className="flex gap-2">
+              <button
+                onClick={() => handleEdit(post)}
+                className="bg-yellow-400 px-2 rounded"
+              >
+                Edit
+              </button>
 
-        {postsStatus === "success" &&
-          posts.slice(0, 5).map((p) => (
-            <p key={p.id}>{p.title}</p>
-          ))}
-      </div>
+              <button
+                onClick={() => handleDelete(post.id)}
+                className="bg-red-500 text-white px-2 rounded"
+              >
+                Delete
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
